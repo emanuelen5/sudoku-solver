@@ -81,3 +81,11 @@ class SudokuBoard:
                 if i == 8 and j == 8:
                     s += "=" * print_width + "\n"
         return s
+
+
+if __name__ == "__main__":
+    from test_sudoku import test_board
+    print(test_board)
+    for i in range(1000):
+        nb = test_board.solve()
+    print(nb)
