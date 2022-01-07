@@ -45,18 +45,25 @@ PyObject *houghaccum(PyObject *self, PyObject *args) {
         tabSin[i] = sin((double) i * angle_step);
     }
 
-    npy_intp accum_dims[] = {numrho, numangle};
+    npy_intp accum_dims[] = {numangle, numrho};
     PyArrayObject *accum = (PyArrayObject*) PyArray_Zeros(2, accum_dims, PyArray_DescrFromType(NPY_UINT64), 0);
+    #define SCALING 256
 
 	printf("Accumulating\n");
     for( int i = 0; i < height; i++ ) {
         for( int j = 0; j < width; j++ ) {
             if( *(npy_uint8*) PyArray_GETPTR2(image, i, j) != 0 )
                 for(int theta = 0; theta < numangle; theta++ ) {
-                    int rho = round( j * tabCos[theta] + i * tabSin[theta] );
+                    double rho = j * tabCos[theta] + i * tabSin[theta];
                     rho -= min_rho;
-                    npy_uint64 *bin = (npy_uint64*)PyArray_GETPTR2(accum, rho, theta);
-                    (*bin)++;
+                    int rho_i = (1 - rho + (int) rho) * SCALING;
+                    npy_uint64 *bin = (npy_uint64*)PyArray_GETPTR2(accum, theta, rho_i);
+                    (*bin) += rho_i;
+                    (*(bin + 1)) += SCALING - rho_i;
+                    if (rho_i > 250 || SCALING - rho_i > 250) {
+                        printf("%d,%d,%d: ", i, j, theta);
+                        printf("%ld => %d, %ld => %d\n", *bin, rho_i, *(bin + 1), SCALING - rho_i);
+                    }
                 }
         }
     }

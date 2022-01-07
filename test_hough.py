@@ -18,7 +18,7 @@ def test_single_line():
     img[:, 5] = 1
     accum = hough.houghaccum(img)
     assert type(accum) == np.ndarray
-    assert np.amax(accum) == 10
+    assert np.amax(accum) == 10 * 255
     print(accum)
 
 
