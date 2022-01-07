@@ -7,7 +7,7 @@ import hough
 
 @pytest.fixture
 def example_image():
-    image_path = Path(__file__).parent.joinpath("example.jpg")
+    image_path = Path(__file__).parent.joinpath("example.png")
     assert image_path.is_file()
     img = cv2.imread(str(image_path))
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

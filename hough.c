@@ -45,7 +45,7 @@ PyObject *houghaccum(PyObject *self, PyObject *args) {
         tabSin[i] = sin((double) i * angle_step);
     }
 
-    npy_intp accum_dims[] = {numrho, numangle};
+    npy_intp accum_dims[] = {numangle, numrho};
     PyArrayObject *accum = (PyArrayObject*) PyArray_Zeros(2, accum_dims, PyArray_DescrFromType(NPY_UINT64), 0);
 
 	printf("Accumulating\n");
@@ -55,7 +55,7 @@ PyObject *houghaccum(PyObject *self, PyObject *args) {
                 for(int theta = 0; theta < numangle; theta++ ) {
                     int rho = round( j * tabCos[theta] + i * tabSin[theta] );
                     rho -= min_rho;
-                    npy_uint64 *bin = (npy_uint64*)PyArray_GETPTR2(accum, rho, theta);
+                    npy_uint64 *bin = (npy_uint64*)PyArray_GETPTR2(accum, theta, rho);
                     (*bin)++;
                 }
         }
