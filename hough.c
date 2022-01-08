@@ -39,10 +39,10 @@ PyObject *houghaccum(PyObject *self, PyObject *args) {
     double tabSin[numangle];
     double tabCos[numangle];
 
-    double angle_step = 2 * M_PI / numangle;
+    double angle_step = M_PI / numangle;
     for (int i=0; i < numangle; i++) {
         tabCos[i] = cos((double) i * angle_step);
-        tabSin[i] = -sin((double) i * angle_step);
+        tabSin[i] = sin((double) i * angle_step);
     }
 
     npy_intp accum_dims[] = {numangle, numrho};
@@ -53,7 +53,7 @@ PyObject *houghaccum(PyObject *self, PyObject *args) {
         for( int j = 0; j < width; j++ ) {
             if( *(npy_uint8*) PyArray_GETPTR2(image, i, j) != 0 )
                 for(int theta = 0; theta < numangle; theta++ ) {
-                    int rho = round( j * tabCos[theta] + i * tabSin[theta] );
+                    int rho = round( j * tabCos[theta] - i * tabSin[theta] );
                     rho -= min_rho;
                     npy_int64 *bin = (npy_int64*)PyArray_GETPTR2(accum, theta, rho);
                     (*bin)++;
