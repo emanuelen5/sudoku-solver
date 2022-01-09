@@ -7,7 +7,6 @@
 
 
 PyObject *houghaccum(PyObject *self, PyObject *args) {
-    printf("Start\n");
     PyObject *arg1 = NULL;
     if (!PyArg_ParseTuple(args, "O", &arg1))
         return NULL;
@@ -48,7 +47,6 @@ PyObject *houghaccum(PyObject *self, PyObject *args) {
     npy_intp accum_dims[] = {numangle, numrho};
     PyArrayObject *accum = (PyArrayObject*) PyArray_Zeros(2, accum_dims, PyArray_DescrFromType(NPY_INT64), 0);
 
-	printf("Accumulating\n");
     for( int i = 0; i < height; i++ ) {
         for( int j = 0; j < width; j++ ) {
             if( *(npy_uint8*) PyArray_GETPTR2(image, i, j) != 0 )
@@ -60,8 +58,6 @@ PyObject *houghaccum(PyObject *self, PyObject *args) {
                 }
         }
     }
-
-    printf("done\n");
 
 	Py_DECREF(image);
 	return (PyObject*) accum;
