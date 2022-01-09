@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 import hough
 
@@ -38,3 +39,6 @@ class HoughAccumulator:
         else:
             rows = self.theta_to_row(theta)
         return self.acc[rows, cols]
+    
+    def copy(self) -> "HoughAccumulator":
+        return copy.deepcopy(self)
